@@ -7,6 +7,106 @@ A mobile-first event ticketing system with **Pix** payments for Arena CB (Capão
 
 Stack: TypeScript · Hono (SSR JSX) · Cloudflare Workers + D1 + R2 · Drizzle · Mercado Pago Orders API · Vitest · Biome. Architecture: DDD + Clean Architecture ([CLAUDE.md](CLAUDE.md), [ADR 0001](docs/adr/0001-stack.md)).
 
+## Architecture
+
+### Runtime (single production environment)
+
+```mermaid
+flowchart LR
+    buyer["📱 Buyer<br/>(mobile browser)"]
+    admin["📱 Admin<br/>(mobile browser)"]
+    google["Google Identity Services<br/>(sign-in, ID token)"]
+    mp["Mercado Pago<br/>Orders API (Pix)"]
+
+    subgraph cf["Cloudflare (free plan)"]
+        assets["Static Assets<br/>/logo.jpg"]
+        worker["Worker: Hono app<br/>SSR pages · JSON endpoints · webhook"]
+        cron["Cron Trigger<br/>every 5 min"]
+        d1[("D1 (SQLite)<br/>users · events · orders · tickets")]
+        r2[("R2<br/>event banners")]
+        logs["Workers Observability<br/>JSON logs"]
+    end
+
+    buyer -- HTTPS --> worker
+    admin -- HTTPS --> worker
+    buyer -. logo .-> assets
+    buyer -- "Sign in with Google" --> google
+    worker -- "verify ID token (JWKS)" --> google
+    worker -- "create Pix / read status" --> mp
+    mp -- "signed webhook" --> worker
+    cron --> worker
+    worker --> d1
+    worker --> r2
+    worker --> logs
+```
+
+### Code layers (DDD + Clean Architecture)
+
+Dependencies point inward: `domain` imports nothing from the outer layers, and the wiring happens only in the composition root (`src/interface/http/container.ts`).
+
+```mermaid
+flowchart TB
+    subgraph interface["interface/http (input adapters)"]
+        routes["Hono routes + JSX views<br/>public · auth · orders · admin · webhooks"]
+        mw["middleware<br/>request context · session · same-origin · guards"]
+        root["container.ts<br/>composition root"]
+    end
+
+    subgraph app["contexts/*/application (use cases)"]
+        uc["createEvent · publishEvent · placeOrder · confirmPayment<br/>processPendingOrders · issueTickets · checkIn · signInWithGoogle"]
+    end
+
+    subgraph domain["contexts/*/domain (pure business rules)"]
+        ent["Event · Money · Order · Quantity · Ticket · Email · AdminPolicy<br/>OrderPaid event · repository and gateway ports"]
+    end
+
+    subgraph infra["contexts/*/infrastructure (output adapters)"]
+        repos["D1 repositories + read models (Drizzle)"]
+        gw["MercadoPagoGateway · FakePaymentGateway"]
+        auth["GoogleIdTokenVerifier · session JWT"]
+    end
+
+    routes --> uc
+    mw --> routes
+    root --> uc
+    root --> infra
+    uc --> ent
+    repos -. implements ports .-> ent
+    gw -. implements ports .-> ent
+    auth -. implements ports .-> uc
+```
+
+Bounded contexts: `identity` · `events` · `sales` · `payments` · `ticketing`.
+
+### Pix purchase flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor B as Buyer
+    participant W as Worker (Hono)
+    participant DB as D1
+    participant MP as Mercado Pago
+
+    B->>W: POST /e/:slug/orders (quantity)
+    W->>DB: UPDATE events SET sold = sold + q WHERE sold + q <= capacity
+    alt no seats left
+        W-->>B: redirect with SOLD_OUT
+    else seats reserved
+        W->>DB: INSERT order (pending, expires in 30 min)
+        W->>MP: POST /v1/orders (Pix, idempotency key = order id)
+        MP-->>W: QR code + copy-and-paste code
+        W-->>B: order page with QR (polls status every 5 s)
+    end
+    B->>MP: pays the Pix in the bank app
+    MP-->>W: POST /webhooks/mercadopago (x-signature)
+    W->>MP: GET /v1/orders/:id (never trusts the webhook payload)
+    W->>DB: order pending → paid (compare-and-set) + issue tickets
+    B->>W: GET /orders/:id/status
+    W-->>B: paid → "Meus ingressos" with QR tickets
+    Note over W,DB: Cron (every 5 min): reconcile pending orders and expire unpaid ones, releasing seats
+```
+
 ## Local development
 
 ```bash

@@ -100,6 +100,7 @@ Config only via environment (`config.ts` validates on boot) · backing services 
 - Prefer immutable objects: `readonly` properties, `ReadonlyArray`, `as const`; aggregate methods return a new instance instead of mutating.
 - Follow DDD, SOLID, Clean Architecture and KISS.
 - Apply GoF patterns only when necessary. Avoid overengineering; keep it simple.
+- After every change, check whether `README.md` needs to be updated (setup/deploy steps, commands, env vars, routes, architecture diagram, docs links) and update it in the same change.
 
 ### Indentation and readability (TypeScript / Hono / JSX)
 
