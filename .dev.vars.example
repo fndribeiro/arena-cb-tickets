@@ -1,0 +1,10 @@
+# Copy to .dev.vars for local development (never commit .dev.vars).
+APP_URL=http://localhost:8787
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+SESSION_SECRET=change-me-to-a-random-string-with-at-least-32-chars
+ADMIN_EMAILS=admin@example.com
+PAYMENT_GATEWAY=fake
+PAYMENT_TEST_MODE=true
+# Required when PAYMENT_GATEWAY=mercadopago
+MP_ACCESS_TOKEN=
+MP_WEBHOOK_SECRET=

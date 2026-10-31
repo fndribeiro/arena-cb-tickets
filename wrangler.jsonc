@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "arena-cb-tickets",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  // Static files (logo) served by Workers Static Assets before the worker runs (free).
+  "assets": { "directory": "./public" },
+  "triggers": { "crons": ["*/5 * * * *"] },
+  // Non-secret config (12-factor III). Secrets: `wrangler secret put <NAME>`
+  // SESSION_SECRET, ADMIN_EMAILS, MP_ACCESS_TOKEN, MP_WEBHOOK_SECRET
+  "vars": {
+    "APP_URL": "https://arena-cb-tickets.workers.dev",
+    "GOOGLE_CLIENT_ID": "set-me.apps.googleusercontent.com",
+    "PAYMENT_GATEWAY": "mercadopago",
+    "PAYMENT_TEST_MODE": "true",
+    "ORDER_TTL_MINUTES": "30",
+    "MAX_TICKETS_PER_ORDER": "10"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "arena-cb-tickets",
+      // Replace with the id printed by `wrangler d1 create arena-cb-tickets`
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [{ "binding": "BANNERS", "bucket_name": "arena-cb-tickets-banners" }]
+}
