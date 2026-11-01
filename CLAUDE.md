@@ -13,7 +13,7 @@ Goal: run for a fraction of Sympla's fee (10%, min R$2.50/ticket) — infra cost
 
 ## Stack
 
-- TypeScript (strict) · [Hono](https://hono.dev) with server-side JSX (no SPA)
+- Node.js 26 LTS for tooling (pinned in `.nvmrc`, used by CI) · TypeScript (strict) · [Hono](https://hono.dev) with server-side JSX (no SPA)
 - Cloudflare Workers (free plan) · D1 (SQLite) via Drizzle ORM · R2 for event banners · Cron Triggers
 - Auth: Google Identity Services ID token verified with `jose`; session in a signed HttpOnly cookie. **No custom password/user-credential system.**
 - Payments: Mercado Pago Orders API (Pix), behind the `PaymentGateway` port; `FakeGateway` for local/tests
@@ -75,6 +75,7 @@ Dependency rules:
 
 ## Security
 
+- Dependency install scripts are blocked by npm unless allowed in `package.json` → `allowScripts`. Review any new entry (`npm install-scripts ls`) before approving it with `npm install-scripts approve <pkg>`.
 - Never commit secrets. Local secrets live in `.dev.vars` (git-ignored); production uses `wrangler secret put`.
 - Payment confirmation is never trusted from a webhook payload alone: always re-read the charge status from the gateway API before marking an order as paid.
 - Verify Mercado Pago webhook signatures (`x-signature`) with `MP_WEBHOOK_SECRET`.

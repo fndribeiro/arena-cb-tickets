@@ -5,7 +5,7 @@ A mobile-first event ticketing system with **Pix** payments for Arena CB (Capão
 - **Admin** (Google accounts listed in `ADMIN_EMAILS`): creates/publishes events, shares the link, sees the paid list, exports CSV, checks tickets in with the phone camera.
 - **Buyer** (any Google account): opens the link, signs in with Google, pays with Pix, receives QR-code tickets.
 
-Stack: TypeScript · Hono (SSR JSX) · Cloudflare Workers + D1 + R2 · Drizzle · Mercado Pago Orders API · Vitest · Biome. Architecture: DDD + Clean Architecture ([CLAUDE.md](CLAUDE.md), [ADR 0001](docs/adr/0001-stack.md)).
+Stack: Node.js 26 LTS (tooling) · TypeScript · Hono (SSR JSX) · Cloudflare Workers + D1 + R2 · Drizzle · Mercado Pago Orders API · Vitest · Biome. Architecture: DDD + Clean Architecture ([CLAUDE.md](CLAUDE.md), [ADR 0001](docs/adr/0001-stack.md)).
 
 ## Architecture
 
@@ -109,7 +109,10 @@ sequenceDiagram
 
 ## Local development
 
+Requires **Node.js 26 LTS** (pinned in `.nvmrc`; CI reads the same file).
+
 ```bash
+nvm use                                 # or install Node 26 LTS another way
 npm ci
 cp .dev.vars.example .dev.vars          # fake gateway + test mode by default
 npm run db:migrate:local

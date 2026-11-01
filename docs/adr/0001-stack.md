@@ -9,6 +9,7 @@ Arena CB is a micro-business. It needs a ticketing system that costs close to no
 
 ## Decision
 
+- **Node.js 26 LTS** for local tooling and CI (`.nvmrc`); the app itself runs on the Workers runtime.
 - **TypeScript + Hono (server-side JSX)**: one language end to end, no SPA build, small HTML pages for slow 4G.
 - **Cloudflare Workers (free plan)**: serverless with no servers to patch. It includes 100k requests/day, automatic HTTPS and a São Paulo edge location. There is a free `*.workers.dev` domain for the PoC.
 - **Cloudflare D1 (SQLite) + Drizzle**: a relational database with versioned migrations on the free tier (5 GB, 5M reads/day).

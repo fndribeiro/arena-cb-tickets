@@ -1,7 +1,7 @@
 /**
  * Mercado Pago sandbox spike: does a test Pix order get approved automatically?
  *
- * Usage (Node 22+, test credentials only):
+ * Usage (Node 26 LTS, see .nvmrc; test credentials only):
  *   MP_ACCESS_TOKEN=<test seller access token> MP_TEST_PAYER_EMAIL=<test buyer email> node scripts/mp-sandbox-spike.ts
  *
  * Record the outcome in docs/adr/0002-mercadopago-pix-testing.md.
