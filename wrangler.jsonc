@@ -11,7 +11,7 @@
   // SESSION_SECRET, ADMIN_EMAILS, MP_ACCESS_TOKEN, MP_WEBHOOK_SECRET
   "vars": {
     "APP_URL": "https://arena-cb-tickets.arena-cb-tickets.workers.dev",
-    "GOOGLE_CLIENT_ID": "set-me.apps.googleusercontent.com",
+    "GOOGLE_CLIENT_ID": "681923867833-pailidbvn3igkingtp2dhvdigbj7kb0c.apps.googleusercontent.com",
     // PoC: fake gateway until Mercado Pago test credentials are set; switch to "mercadopago" + MP_* secrets.
     "PAYMENT_GATEWAY": "fake",
     "PAYMENT_TEST_MODE": "true",

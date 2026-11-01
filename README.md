@@ -127,7 +127,8 @@ Google sign-in locally requires a real OAuth Client ID with `http://localhost:87
 
 - URL: **https://arena-cb-tickets.arena-cb-tickets.workers.dev** (test mode, fake payment gateway until Mercado Pago test credentials are configured).
 - D1 `arena-cb-tickets` lives in `enam` (closest D1 region to Brazil); R2 bucket `arena-cb-tickets-banners`.
-- Secrets set: `SESSION_SECRET`, `ADMIN_EMAILS`. Pending: real `GOOGLE_CLIENT_ID`, then `MP_ACCESS_TOKEN` / `MP_WEBHOOK_SECRET` with `PAYMENT_GATEWAY=mercadopago`.
+- Secrets set: `SESSION_SECRET`, `ADMIN_EMAILS`. Pending: `MP_ACCESS_TOKEN` / `MP_WEBHOOK_SECRET` with `PAYMENT_GATEWAY=mercadopago`.
+- Google OAuth: Google Cloud project `arena-cb-tickets`, web client "Arena CB Tickets Web" (origins: the workers.dev URL, `http://localhost:8787`, `http://localhost`). The consent screen is in **Testing** status, so only the test users listed under *Google Auth Platform → Audience* (max 100) can sign in. Publishing requires public home page, privacy policy and terms of service links, and Google verification because the consent screen shows a logo.
 
 ## First deploy (PoC on `*.workers.dev`)
 

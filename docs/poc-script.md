@@ -2,6 +2,8 @@
 
 Ambiente: **https://arena-cb-tickets.arena-cb-tickets.workers.dev**. Ele fica em **modo teste**, então nenhum dinheiro real é cobrado.
 
+Antes de começar: enquanto o login do Google estiver em modo de teste, **cada conta Google que vai usar a PoC precisa estar cadastrada como usuário de teste** em Google Cloud → Google Auth Platform → Audience → Test users (máximo de 100).
+
 Você vai precisar de:
 - o celular do admin, logado na conta Google cadastrada em `ADMIN_EMAILS`;
 - um segundo celular, de um comprador com qualquer conta Google.
