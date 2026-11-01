@@ -1,6 +1,6 @@
 # Roteiro da PoC (para a Arena CB testar de ponta a ponta)
 
-Ambiente: `https://arena-cb-tickets.<conta>.workers.dev`. Ele fica em **modo teste**, então nenhum dinheiro real é cobrado.
+Ambiente: **https://arena-cb-tickets.arena-cb-tickets.workers.dev**. Ele fica em **modo teste**, então nenhum dinheiro real é cobrado.
 
 Você vai precisar de:
 - o celular do admin, logado na conta Google cadastrada em `ADMIN_EMAILS`;

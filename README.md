@@ -123,11 +123,17 @@ npm test                                # unit + integration (D1 in miniflare)
 
 Google sign-in locally requires a real OAuth Client ID with `http://localhost:8787` as an authorized JavaScript origin.
 
+## Production (PoC)
+
+- URL: **https://arena-cb-tickets.arena-cb-tickets.workers.dev** (test mode, fake payment gateway until Mercado Pago test credentials are configured).
+- D1 `arena-cb-tickets` lives in `enam` (closest D1 region to Brazil); R2 bucket `arena-cb-tickets-banners`.
+- Secrets set: `SESSION_SECRET`, `ADMIN_EMAILS`. Pending: real `GOOGLE_CLIENT_ID`, then `MP_ACCESS_TOKEN` / `MP_WEBHOOK_SECRET` with `PAYMENT_GATEWAY=mercadopago`.
+
 ## First deploy (PoC on `*.workers.dev`)
 
 1. **Cloudflare:** `npx wrangler login`, then:
    ```bash
-   npx wrangler d1 create arena-cb-tickets      # copy database_id into wrangler.jsonc
+   npx wrangler d1 create arena-cb-tickets --location enam   # copy database_id into wrangler.jsonc
    npx wrangler r2 bucket create arena-cb-tickets-banners
    npx wrangler deploy                           # prints https://arena-cb-tickets.<account>.workers.dev
    ```

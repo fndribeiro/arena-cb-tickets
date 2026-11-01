@@ -10,9 +10,10 @@
   // Non-secret config (12-factor III). Secrets: `wrangler secret put <NAME>`
   // SESSION_SECRET, ADMIN_EMAILS, MP_ACCESS_TOKEN, MP_WEBHOOK_SECRET
   "vars": {
-    "APP_URL": "https://arena-cb-tickets.workers.dev",
+    "APP_URL": "https://arena-cb-tickets.arena-cb-tickets.workers.dev",
     "GOOGLE_CLIENT_ID": "set-me.apps.googleusercontent.com",
-    "PAYMENT_GATEWAY": "mercadopago",
+    // PoC: fake gateway until Mercado Pago test credentials are set; switch to "mercadopago" + MP_* secrets.
+    "PAYMENT_GATEWAY": "fake",
     "PAYMENT_TEST_MODE": "true",
     "ORDER_TTL_MINUTES": "30",
     "MAX_TICKETS_PER_ORDER": "10"
@@ -21,8 +22,8 @@
     {
       "binding": "DB",
       "database_name": "arena-cb-tickets",
-      // Replace with the id printed by `wrangler d1 create arena-cb-tickets`
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      // Created with `wrangler d1 create arena-cb-tickets --location enam` (closest D1 region to Brazil)
+      "database_id": "c415b48f-32ad-4589-b530-812509e5f61a",
       "migrations_dir": "migrations"
     }
   ],
