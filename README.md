@@ -141,9 +141,14 @@ Google sign-in locally requires a real OAuth Client ID with `http://localhost:87
    npx wrangler secret put MP_WEBHOOK_SECRET
    ```
 5. `npm run db:migrate:remote && npm run deploy`.
-6. Optional CI/CD: add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub secrets; every push to `main` runs lint → typecheck → tests → migrations → deploy.
+6. Optional CI/CD: add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub secrets; every push to `main` runs dependency audit → lint → typecheck → tests → migrations → deploy.
 
 Validate the Mercado Pago sandbox behaviour with `scripts/mp-sandbox-spike.ts` ([ADR 0002](docs/adr/0002-mercadopago-pix-testing.md)), then follow the [PoC script](docs/poc-script.md).
+
+## Security scanning
+
+- **SAST:** [CodeQL](.github/workflows/codeql.yml) (`security-extended` queries for JavaScript/TypeScript) runs on every push to any branch, on every pull request and weekly. Findings show up in **Security → Code scanning** and as a check on pull requests.
+- **SCA:** `npm audit --omit=dev --audit-level=high` runs in [CI](.github/workflows/ci.yml) and fails the build on high/critical vulnerabilities in runtime dependencies.
 
 ## Operations (12-factor)
 

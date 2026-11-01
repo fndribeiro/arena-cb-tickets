@@ -76,6 +76,7 @@ Dependency rules:
 ## Security
 
 - Dependency install scripts are blocked by npm unless allowed in `package.json` → `allowScripts`. Review any new entry (`npm install-scripts ls`) before approving it with `npm install-scripts approve <pkg>`.
+- Security scanning runs in GitHub Actions: CodeQL SAST on every push/PR (`.github/workflows/codeql.yml`) and `npm audit` (high+) in CI. Fix or explicitly triage every new alert; never dismiss one without a written reason.
 - Never commit secrets. Local secrets live in `.dev.vars` (git-ignored); production uses `wrangler secret put`.
 - Payment confirmation is never trusted from a webhook payload alone: always re-read the charge status from the gateway API before marking an order as paid.
 - Verify Mercado Pago webhook signatures (`x-signature`) with `MP_WEBHOOK_SECRET`.
