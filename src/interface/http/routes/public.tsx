@@ -7,6 +7,7 @@ import { AUTH_JS, CHECKIN_JS, ORDER_STATUS_JS, SHARE_JS } from "../assets/script
 import { APP_CSS } from "../assets/styles";
 import { ErrorAlert, GoogleSignInButton, Layout } from "../views/layout";
 import { messageFor } from "../views/messages";
+import { VENUE, VENUE_MAPS_URL } from "../views/venue";
 
 const HOME_EVENTS_LIMIT = 20;
 
@@ -79,7 +80,7 @@ async function renderHome(c: Context<AppEnv>) {
   return c.html(
     <Layout title="Próximos eventos" viewer={c.get("viewer")} testMode={config.payment.testMode}>
       <div class="hero">
-        <img src="/logo.jpg" alt="Arena CB" width="120" height="120" />
+        <img src="/logo.jpg" alt={VENUE.name} width="120" height="120" />
       </div>
       <h1 class="gradient-text">Próximos eventos</h1>
       {onSale.length === 0 && <p class="muted">Nenhum evento à venda no momento. Fique de olho no nosso Instagram!</p>}
@@ -158,6 +159,12 @@ async function renderEventPage(c: Context<AppEnv>) {
         {event.bannerKey && <img class="banner" src={`/banners/${event.bannerKey}`} alt="" />}
         <h1>{event.title}</h1>
         <p class="muted">{formatDateTime(event.startsAt)}</p>
+        <p class="muted">
+          {VENUE.name} ·{" "}
+          <a href={VENUE_MAPS_URL} target="_blank" rel="noopener noreferrer">
+            {VENUE.address}
+          </a>
+        </p>
         {event.description && <p style="white-space:pre-line">{event.description}</p>}
         <div class="row">
           <span class="price">{event.price.format()}</span>

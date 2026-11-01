@@ -44,5 +44,6 @@ video#scanner{width:100%;border-radius:12px;background:#000}
 .guide-preview .btn{pointer-events:none;max-width:320px}
 .guide-list{margin:0;padding-left:20px}.guide-list li{margin:6px 0}
 .guide-nav{display:flex;flex-direction:column;gap:10px;margin-top:6px}.guide-nav form{margin:0}
-footer{color:var(--muted);font-size:12px;text-align:center;padding:24px 16px}
+footer{color:var(--muted);font-size:12px;line-height:1.6;text-align:center;padding:24px 16px}
+footer a{color:var(--muted)}
 `;

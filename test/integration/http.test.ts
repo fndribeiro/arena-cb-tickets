@@ -99,6 +99,25 @@ describe("public pages and security", () => {
     expect(page).toContain("Entre com sua conta Google");
   });
 
+  it("brands the site as Arena and shows the venue address with a map link", async () => {
+
+    const event = await insertPublishedEvent(db, { title: "Samba na Arena" });
+
+    const home = await (await call("/")).text();
+
+    const page = await (await call(`/e/${event.slug}`)).text();
+
+    expect(home).not.toMatch(/Arena CB/i);
+
+    expect(home).toContain("<title>Próximos eventos · Arena</title>");
+
+    expect(home).toContain("R. Boulevard, 280 - Terras do Imbirucu, Capão Bonito - SP");
+
+    expect(page).toContain("R. Boulevard, 280 - Terras do Imbirucu, Capão Bonito - SP");
+
+    expect(page).toContain("https://www.google.com/maps/search/?api=1&amp;query=R.%20Boulevard%2C%20280");
+  });
+
   it("escapes user content (XSS)", async () => {
 
     const event = await insertPublishedEvent(db, { title: "<script>alert(1)</script>" });

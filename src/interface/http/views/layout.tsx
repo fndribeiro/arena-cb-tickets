@@ -1,6 +1,7 @@
 import type { Child } from "hono/jsx";
 import type { Viewer } from "../app-env";
 import { assetUrl } from "../assets/version";
+import { VENUE, VENUE_MAPS_URL } from "./venue";
 
 export interface LayoutProps {
   readonly title: string;
@@ -28,7 +29,7 @@ export function Layout(props: LayoutProps) {
         <meta name="theme-color" content="#000000" />
         <link rel="icon" href="/logo.jpg" />
         <link rel="apple-touch-icon" href="/logo.jpg" />
-        <title>{`${props.title} · Arena CB`}</title>
+        <title>{`${props.title} · ${VENUE.name}`}</title>
         <link rel="stylesheet" href={assetUrl("/assets/app.css")} />
         {props.meta && <OpenGraph title={props.title} meta={props.meta} />}
       </head>
@@ -38,7 +39,13 @@ export function Layout(props: LayoutProps) {
           {props.testMode && <div class="alert test">MODO TESTE — nenhum pagamento real é cobrado.</div>}
           {props.children}
         </main>
-        <footer>Arena CB · Capão Bonito/SP</footer>
+        <footer>
+          <strong>{VENUE.name}</strong>
+          <br />
+          <a href={VENUE_MAPS_URL} target="_blank" rel="noopener noreferrer">
+            {VENUE.address}
+          </a>
+        </footer>
         {props.googleClientId && <GoogleScripts clientId={props.googleClientId} />}
         {props.scripts?.map((src) => <script src={assetUrl(src)} defer></script>)}
       </body>
@@ -50,8 +57,8 @@ function Header(props: { readonly viewer: Viewer | null }) {
   return (
     <header class="top">
       <a class="brand" href="/">
-        <img src="/logo.jpg" alt="Arena CB" width="40" height="40" />
-        <span class="brand-name">ARENA CB</span>
+        <img src="/logo.jpg" alt={VENUE.name} width="40" height="40" />
+        <span class="brand-name">{VENUE.name.toUpperCase()}</span>
       </a>
       <nav>
         {props.viewer?.role === "admin" && <a href="/admin">Admin</a>}
