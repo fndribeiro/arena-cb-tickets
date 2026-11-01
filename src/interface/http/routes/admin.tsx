@@ -4,6 +4,7 @@ import { z } from "zod";
 import { closeEvent, createEvent, publishEvent } from "../../../contexts/events/application/manage-events";
 import type { Event } from "../../../contexts/events/domain/event";
 import { Money } from "../../../contexts/events/domain/money";
+import { shouldShowAdminGuide } from "../../../contexts/identity/application/admin-guide";
 import { checkIn } from "../../../contexts/ticketing/application/check-in";
 import type { AttendeeView } from "../../../contexts/ticketing/application/ticket-queries";
 import { newId } from "../../../shared/ids";
@@ -13,6 +14,7 @@ import { csvRow } from "../csv";
 import { requireAdmin } from "../middleware/guards";
 import { ErrorAlert, Layout } from "../views/layout";
 import { messageFor } from "../views/messages";
+import { handleCompleteAdminGuide, renderAdminGuide } from "./admin-guide";
 
 const ADMIN_EVENTS_LIMIT = 50;
 
@@ -31,6 +33,10 @@ adminRoutes.use("/admin", requireAdmin);
 adminRoutes.use("/admin/*", requireAdmin);
 
 adminRoutes.get("/admin", renderDashboard);
+
+adminRoutes.get("/admin/guide", renderAdminGuide);
+
+adminRoutes.post("/admin/guide/complete", handleCompleteAdminGuide);
 
 adminRoutes.get("/admin/events/new", renderNewEventForm);
 
@@ -52,7 +58,15 @@ const STATUS_LABELS: Readonly<Record<Event["status"], string>> = { draft: "Rascu
 
 async function renderDashboard(c: Context<AppEnv>) {
 
-  const { events, config } = c.get("container");
+  const { events, config, adminGuide } = c.get("container");
+
+  const viewer = c.get("viewer");
+
+  const firstAccess: boolean = viewer !== null && (await shouldShowAdminGuide(viewer, adminGuide));
+
+  if (firstAccess) {
+    return c.redirect("/admin/guide");
+  }
 
   const recent: ReadonlyArray<Event> = await events.listRecent(ADMIN_EVENTS_LIMIT);
 
@@ -60,6 +74,9 @@ async function renderDashboard(c: Context<AppEnv>) {
     <Layout title="Admin" viewer={c.get("viewer")} testMode={config.payment.testMode}>
       <h1>Eventos</h1>
       <a class="btn" href="/admin/events/new">+ Novo evento</a>
+      <p class="muted" style="text-align:center">
+        <a href="/admin/guide">Ver guia de uso</a>
+      </p>
       <h2>Recentes</h2>
       {recent.length === 0 && <p class="muted">Nenhum evento criado ainda.</p>}
       {recent.map((event) => (

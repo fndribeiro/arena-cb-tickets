@@ -2,7 +2,7 @@
 
 A mobile-first event ticketing system with **Pix** payments for Arena CB (Capão Bonito/SP). It replaces the manual Instagram + Excel + Pix-receipt workflow and costs ~92% less than Sympla's fee (see [docs/costs.md](docs/costs.md)).
 
-- **Admin** (Google accounts listed in `ADMIN_EMAILS`): creates/publishes events, shares the link, sees the paid list, exports CSV, checks tickets in with the phone camera.
+- **Admin** (Google accounts listed in `ADMIN_EMAILS`): on first access gets a 3-step guide (`/admin/guide`: creating an event, sharing it, how the Pix QR code payment works), then creates/publishes events, shares the link, sees the paid list, exports CSV, checks tickets in with the phone camera.
 - **Buyer** (any Google account): opens the link, signs in with Google, pays with Pix, receives QR-code tickets.
 
 Stack: Node.js 26 LTS (tooling) · TypeScript · Hono (SSR JSX) · Cloudflare Workers + D1 + R2 · Drizzle · Mercado Pago Orders API · Vitest · Biome. Architecture: DDD + Clean Architecture ([CLAUDE.md](CLAUDE.md), [ADR 0001](docs/adr/0001-stack.md)).

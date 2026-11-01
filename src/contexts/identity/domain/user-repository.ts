@@ -9,4 +9,7 @@ export interface UpsertUserInput {
 export interface UserRepository {
   upsertByEmail(input: UpsertUserInput): Promise<User>;
   findById(id: string): Promise<User | null>;
+  findAdminGuideCompletedAt(userId: string): Promise<Date | null>;
+  /** Stores the first completion only; returns false when it was already completed. */
+  markAdminGuideCompleted(userId: string, completedAt: Date): Promise<boolean>;
 }

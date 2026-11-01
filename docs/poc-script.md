@@ -10,6 +10,7 @@ Você vai precisar de:
 
 | # | Quem | Passo | Resultado esperado |
 |---|---|---|---|
+| 0 | Admin | Primeiro acesso ao Admin | Abre o guia de 3 passos (criar evento, compartilhar, QR Code Pix); ao final, **Entendi, criar meu primeiro evento** leva ao formulário. Depois, o guia fica em **Ver guia de uso** |
 | 1 | Admin | Entrar → Admin → **+ Novo evento**: "Sertanejo Sexta", R$20,00, capacidade 5, banner opcional → **Criar rascunho** → **Publicar** | O evento aparece como "À venda" |
 | 2 | Admin | **Compartilhar no Instagram/WhatsApp** | O link abre com título, data, preço e imagem (logo ou banner) |
 | 3 | Comprador | Abrir o link → **Continuar com o Google** → quantidade 2 → **Pagar com Pix** | A tela mostra o QR Code e o "copia e cola" |

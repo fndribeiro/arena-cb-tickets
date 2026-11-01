@@ -15,6 +15,7 @@ header.top nav a{white-space:nowrap}
 main{max-width:640px;margin:0 auto;padding:16px}
 h1{font-size:1.5rem;margin:.2em 0 .4em}h2{font-size:1.15rem;margin:1.2em 0 .5em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:0 0 14px}
+.card>:first-child{margin-top:0}.card>:last-child{margin-bottom:0}
 .card img.banner{width:100%;border-radius:10px;display:block;margin-bottom:12px;aspect-ratio:16/9;object-fit:cover}
 .muted{color:var(--muted);font-size:14px}
 .price{font-size:1.4rem;font-weight:800;color:var(--orange)}
@@ -35,5 +36,13 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 .stats{display:flex;gap:10px}.stats .card{flex:1;text-align:center}.stats strong{display:block;font-size:1.4rem}
 video#scanner{width:100%;border-radius:12px;background:#000}
 #checkin-result{font-size:1.2rem;text-align:center}
+
+.guide-dots{display:flex;gap:8px;list-style:none;padding:0;margin:4px 0 8px}
+.guide-dots li{width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:var(--line);color:var(--muted)}
+.guide-dots li.active{background:var(--button);color:#fff}
+.guide-preview{display:flex;justify-content:center;padding:12px;border:1px dashed var(--line);border-radius:12px;margin:8px 0}
+.guide-preview .btn{pointer-events:none;max-width:320px}
+.guide-list{margin:0;padding-left:20px}.guide-list li{margin:6px 0}
+.guide-nav{display:flex;flex-direction:column;gap:10px;margin-top:6px}.guide-nav form{margin:0}
 footer{color:var(--muted);font-size:12px;text-align:center;padding:24px 16px}
 `;

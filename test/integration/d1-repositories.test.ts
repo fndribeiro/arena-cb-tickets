@@ -211,3 +211,27 @@ describe("D1UserRepository", () => {
     expect(second.name).toBe("Nome Novo");
   });
 });
+
+describe("D1UserRepository admin guide", () => {
+  it("stores the first completion date only once", async () => {
+
+    const repository = new D1UserRepository(db);
+
+    const user = await insertUser(db);
+
+    const first = new Date("2026-11-01T15:00:00Z");
+
+    expect(await repository.findAdminGuideCompletedAt(user.id)).toBeNull();
+
+    expect(await repository.markAdminGuideCompleted(user.id, first)).toBe(true);
+
+    expect(await repository.markAdminGuideCompleted(user.id, new Date("2026-11-02T15:00:00Z"))).toBe(false);
+
+    expect(await repository.findAdminGuideCompletedAt(user.id)).toEqual(first);
+  });
+
+  it("returns null for unknown users", async () => {
+
+    expect(await new D1UserRepository(db).findAdminGuideCompletedAt(newId())).toBeNull();
+  });
+});

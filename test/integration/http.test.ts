@@ -266,3 +266,68 @@ describe("webhooks", () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe("admin onboarding guide", () => {
+  it("guides the admin on first access until it is completed", async () => {
+
+    const admin = await insertUser(db, "admin@arena.test");
+
+    const adminCookie = await cookieFor(admin);
+
+    const firstAccess = await call("/admin", { cookie: adminCookie });
+
+    expect(firstAccess.status).toBe(302);
+
+    expect(firstAccess.headers.get("location")).toBe("/admin/guide");
+
+    const stepOne = await (await call("/admin/guide", { cookie: adminCookie })).text();
+
+    const stepTwo = await (await call("/admin/guide?step=2", { cookie: adminCookie })).text();
+
+    const stepThree = await (await call("/admin/guide?step=3", { cookie: adminCookie })).text();
+
+    expect(stepOne).toContain("Criar um evento");
+
+    expect(stepOne).toContain("+ Novo evento");
+
+    expect(stepTwo).toContain("Compartilhar no Instagram/WhatsApp");
+
+    expect(stepThree).toContain("QR Code Pix");
+
+    expect(stepThree).toContain("/admin/guide/complete");
+
+    const completed = await call("/admin/guide/complete", { method: "POST", cookie: adminCookie, body: form({}) });
+
+    expect(completed.headers.get("location")).toBe("/admin/events/new");
+
+    const secondAccess = await call("/admin", { cookie: adminCookie });
+
+    const dashboard = await secondAccess.text();
+
+    expect(secondAccess.status).toBe(200);
+
+    expect(dashboard).toContain('href="/admin/guide"');
+  });
+
+  it.each(["0", "4", "abc", "-1", "1.5"])("falls back to the first step for an invalid step %s", async (step) => {
+
+    const admin = await insertUser(db, "admin@arena.test");
+
+    const page = await (await call(`/admin/guide?step=${step}`, { cookie: await cookieFor(admin) })).text();
+
+    expect(page).toContain("Criar um evento");
+  });
+
+  it("is restricted to admins", async () => {
+
+    const buyer = await insertUser(db);
+
+    const guide = await call("/admin/guide", { cookie: await cookieFor(buyer) });
+
+    const complete = await call("/admin/guide/complete", { method: "POST", cookie: await cookieFor(buyer), body: form({}) });
+
+    expect(guide.status).toBe(403);
+
+    expect(complete.status).toBe(403);
+  });
+});

@@ -3,6 +3,7 @@ import { type AppConfig, loadConfig } from "../../config";
 import type { ManageEventsDeps } from "../../contexts/events/application/manage-events";
 import type { EventRepository } from "../../contexts/events/domain/event-repository";
 import { D1EventRepository } from "../../contexts/events/infrastructure/d1-event-repository";
+import type { AdminGuideDeps } from "../../contexts/identity/application/admin-guide";
 import type { SignInDeps } from "../../contexts/identity/application/sign-in-with-google";
 import { AdminPolicy } from "../../contexts/identity/domain/admin-policy";
 import { D1UserRepository } from "../../contexts/identity/infrastructure/d1-user-repository";
@@ -46,6 +47,7 @@ export interface Container {
   readonly processPending: ProcessPendingOrdersDeps;
   readonly checkIn: CheckInDeps;
   readonly signIn: SignInDeps;
+  readonly adminGuide: AdminGuideDeps;
 }
 
 export function buildContainer(env: Bindings, logger: Logger): Container {
@@ -88,6 +90,7 @@ export function buildContainer(env: Bindings, logger: Logger): Container {
     processPending: { ...confirmPayment, events, batchSize: PENDING_BATCH_SIZE },
     checkIn: { tickets, clock, logger },
     signIn: { verifier: new GoogleIdTokenVerifier({ clientId: config.googleClientId, logger }), users, adminPolicy, logger },
+    adminGuide: { users, clock, logger },
   };
 }
 

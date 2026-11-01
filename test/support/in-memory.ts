@@ -1,6 +1,8 @@
 import type { Event } from "../../src/contexts/events/domain/event";
 import { Event as EventAggregate } from "../../src/contexts/events/domain/event";
 import type { EventRepository } from "../../src/contexts/events/domain/event-repository";
+import type { User } from "../../src/contexts/identity/domain/user";
+import type { UpsertUserInput, UserRepository } from "../../src/contexts/identity/domain/user-repository";
 import type { ChargeStatus, CreatePixChargeInput, PaymentGateway, PixCharge, WebhookRequest } from "../../src/contexts/payments/domain/payment-gateway";
 import { PaymentGatewayError } from "../../src/contexts/payments/domain/payment-gateway";
 import type { Order, OrderStatus } from "../../src/contexts/sales/domain/order";
@@ -123,6 +125,42 @@ export class InMemoryTicketRepository implements TicketRepository {
     }
 
     this.items.set(ticket.id, TicketAggregate.restore(ticket.toSnapshot()));
+
+    return true;
+  }
+}
+
+export class InMemoryUserRepository implements UserRepository {
+  readonly items = new Map<string, User>();
+
+  readonly guideCompletions = new Map<string, Date>();
+
+  async upsertByEmail(input: UpsertUserInput): Promise<User> {
+
+    const existing = this.items.get(input.email);
+
+    const user: User = { id: existing?.id ?? `usr-${this.items.size + 1}`, ...input };
+
+    this.items.set(input.email, user);
+
+    return user;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return [...this.items.values()].find((user) => user.id === id) ?? null;
+  }
+
+  async findAdminGuideCompletedAt(userId: string): Promise<Date | null> {
+    return this.guideCompletions.get(userId) ?? null;
+  }
+
+  async markAdminGuideCompleted(userId: string, completedAt: Date): Promise<boolean> {
+
+    if (this.guideCompletions.has(userId)) {
+      return false;
+    }
+
+    this.guideCompletions.set(userId, completedAt);
 
     return true;
   }
